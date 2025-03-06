@@ -18,8 +18,8 @@ export default function TabOneScreen() {
   }, [])
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Task list</Text>
-      <Link href="/addtask">Add your task</Link>
+      <Link style={styles.button} href="/addtask">Add your task</Link>
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <Task title={data} />
     </View>
   );
@@ -39,4 +39,14 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  button: {
+    backgroundColor: "green",
+    width: 120,
+    height: 25,
+    textAlign: "center",
+    alignContent: "center",
+    color: "#fff",
+    marginTop: 20,
+    borderRadius: 5
+  }
 });
