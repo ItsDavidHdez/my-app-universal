@@ -21,10 +21,17 @@ export default function TabTwoScreen() {
 
   const handleSearch = async () => {
     if (!search) return;
+
     try {
-      const response = await fetch(`${API}/pokemon/${search}`);
+      const response = await fetch(`${API}/pokemon/${search.toLowerCase()}`);
+
+      if (!response.ok) {
+        console.log("Error", "Pokémon not found");
+        return;
+      }
+
       const data = await response.json();
-      setSelectedPokemon(data.url);
+      setSelectedPokemon(data.species.url);
     } catch (error) {
       console.error("Pokemon not found:", error);
     }

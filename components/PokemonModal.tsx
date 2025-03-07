@@ -21,10 +21,14 @@ export default function PokemonModal({ visible, onClose, pokemonUrl }: Props) {
   useEffect(() => {
     if (visible && pokemonUrl) {
       setLoading(true);
-      fetch(pokemonUrl)
+      setPokemonData(null);
+
+      fetch(pokemonUrl.replace("pokemon-species", "pokemon"))
         .then((res) => res.json())
-        .then((data) => setPokemonData(data))
-        .catch((err) => console.error(err))
+        .then((data) => {
+          setPokemonData(data);
+        })
+        .catch((err) => console.error("Error fetching Pokémon data:", err))
         .finally(() => setLoading(false));
     }
   }, [visible, pokemonUrl]);
@@ -37,26 +41,30 @@ export default function PokemonModal({ visible, onClose, pokemonUrl }: Props) {
         <View style={styles.modalContent}>
           {loading ? (
             <ActivityIndicator size="large" color="blue" />
+          ) : pokemonData ? (
+            <>
+              <Text style={styles.pokemonName}>
+                {pokemonData.name?.toUpperCase()}
+              </Text>
+
+              <Text>
+                Type(s):
+                {pokemonData.types?.map((t: any) => t.type.name).join(", ") ||
+                  "No types found"}
+              </Text>
+
+              <Text>
+                Moves:
+                {pokemonData.moves
+                  ?.slice(0, 2)
+                  .map((m: any) => m.move.name)
+                  .join(", ") || "No moves available"}
+              </Text>
+
+              <Button title="Close" onPress={onClose} />
+            </>
           ) : (
-            pokemonData && (
-              <>
-                <Text style={styles.pokemonName}>
-                  {pokemonData.name.toUpperCase()}
-                </Text>
-                <Text>
-                  Type(s):
-                  {pokemonData.types.map((t: any) => t.type.name).join(", ")}
-                </Text>
-                <Text>
-                  Moves:
-                  {pokemonData.moves
-                    .slice(0, 2)
-                    .map((m: any) => m.move.name)
-                    .join(", ")}
-                </Text>
-                <Button title="Close" onPress={onClose} />
-              </>
-            )
+            <Text>Error loading Pokémon data.</Text>
           )}
         </View>
       </View>
